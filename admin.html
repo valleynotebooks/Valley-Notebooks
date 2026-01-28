@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Valley Notebooks — Admin Panel</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#0b0b0b" />
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root{
+      --bg:#0b0b0b;--bg2:#111;--card:#141414;--gold:#d4af37;--gold2:#b8962e;
+      --text:#eaeaea;--muted:#b9b9b9;--danger:#ff5a5a;--ok:#4caf50;
+      --r:14px;--sh:0 10px 30px rgba(0,0,0,.45)
+    }
+    *{box-sizing:border-box}
+    body{margin:0;font-family:Poppins,system-ui;background:linear-gradient(180deg,var(--bg),#000);color:var(--text)}
+    .container{max-width:1200px;margin:auto;padding:16px}
+    .hidden{display:none}
+    button{cursor:pointer}
+    .btn{border:none;border-radius:999px;padding:10px 16px;font-weight:600}
+    .btn-gold{background:linear-gradient(135deg,var(--gold),var(--gold2));color:#000}
+    .btn-dark{background:#1b1b1b;border:1px solid #2a2a2a;color:var(--text)}
+    .topbar{position:sticky;top:0;background:rgba(10,10,10,.8);backdrop-filter:blur(8px);border-bottom:1px solid #1f1f1f}
+    .topbar .row{display:flex;align-items:center;justify-content:space-between}
+    h1{font-size:22px;margin:0}
+    .card{background:linear-gradient(180deg,#151515,#101010);border:1px solid #242424;border-radius:var(--r);box-shadow:var(--sh)}
+    .login{max-width:420px;margin:80px auto}
+    .login h2{text-align:center}
+    .field{margin-bottom:12px}
+    .field label{display:block;margin-bottom:6px}
+    .field input{
+      width:100%;padding:12px;border-radius:10px;background:#141414;border:1px solid #2a2a2a;color:var(--text)
+    }
+    .toolbar{display:flex;gap:10px;flex-wrap:wrap;margin:12px 0}
+    table{width:100%;border-collapse:separate;border-spacing:0 10px}
+    th,td{padding:12px;text-align:left}
+    thead th{color:var(--muted);font-weight:500}
+    tbody tr{background:#111;border:1px solid #242424}
+    tbody tr td:first-child{border-radius:12px 0 0 12px}
+    tbody tr td:last-child{border-radius:0 12px 12px 0}
+    .status{padding:6px 10px;border-radius:999px;font-size:12px}
+    .Pending{background:#333}
+    .Confirmed{background:#3a3a00;color:#fff}
+    .Packed{background:#1b3a3a}
+    .Shipped{background:#123a12}
+    .Delivered{background:#0b3a1a}
+    .Cancelled{background:#3a1212}
+    .actions{display:flex;gap:8px}
+    .muted{color:var(--muted)}
+    .right{text-align:right}
+    .footer{padding:20px;color:var(--muted);text-align:center}
+    @media(max-width:800px){
+      table,thead,tbody,th,td,tr{display:block}
+      thead{display:none}
+      tbody tr{padding:10px}
+      td{padding:6px}
+      .right{text-align:left}
+    }
+  </style>
+</head>
+<body>
+
+  <!-- LOGIN -->
+  <section id="loginSection" class="container login">
+    <div class="card container">
+      <h2>Admin Login</h2>
+      <div class="field">
+        <label>Password</label>
+        <input id="adminPass" type="password" placeholder="Enter admin password" />
+      </div>
+      <button class="btn btn-gold" id="loginBtn">Login</button>
+      <p class="muted">Authorized access only.</p>
+    </div>
+  </section>
+
+  <!-- DASHBOARD -->
+  <section id="dashSection" class="hidden">
+    <div class="topbar">
+      <div class="container row">
+        <h1>Valley Notebooks — Orders</h1>
+        <div class="actions">
+          <button class="btn btn-dark" id="refreshBtn">Refresh</button>
+          <button class="btn btn-dark" id="exportBtn">Export CSV</button>
+          <button class="btn btn-gold" id="logoutBtn">Logout</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="container">
+      <div class="toolbar">
+        <span class="muted">Total Orders: <strong id="count">0</strong></span>
+      </div>
+
+      <div class="card">
+        <table>
+          <thead>
+            <tr>
+              <th>Order ID</th>
+              <th>Customer</th>
+              <th>Phone</th>
+              <th>Qty</th>
+              <th>Amount</th>
+              <th>Status</th>
+              <th class="right">Actions</th>
+            </tr>
+          </thead>
+          <tbody id="rows"></tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="footer">© Valley Notebooks — Admin Panel</div>
+  </section>
+
+<script>
+  const API_BASE = "/api";
+  const ADMIN_KEY = "vn_admin_auth";
+  const PASS_HASH = "vn_admin_123"; // simple gate (protect page access)
+
+  const qs = s => document.querySelector(s);
+  const rows = qs("#rows");
+
+  function isAuthed(){ return localStorage.getItem(ADMIN_KEY)==="1"; }
+  function setAuthed(v){ localStorage.setItem(ADMIN_KEY, v?"1":"0"); }
+
+  function showDash(){
+    qs("#loginSection").classList.add("hidden");
+    qs("#dashSection").classList.remove("hidden");
+    loadOrders();
+  }
+  function showLogin(){
+    qs("#dashSection").classList.add("hidden");
+    qs("#loginSection").classList.remove("hidden");
+  }
+
+  qs("#loginBtn").onclick = () => {
+    const p = qs("#adminPass").value.trim();
+    if(p === PASS_HASH){ setAuthed(true); showDash(); }
+    else alert("Invalid password");
+  };
+  qs("#logoutBtn").onclick = () => { setAuthed(false); showLogin(); };
+  qs("#refreshBtn").onclick = loadOrders;
+
+  async function loadOrders(){
+    rows.innerHTML = "<tr><td>Loading…</td></tr>";
+    const r = await fetch(API_BASE + "/admin/orders");
+    const data = await r.json();
+    qs("#count").textContent = data.length;
+    rows.innerHTML = "";
+    data.forEach(o => {
+      const tr = document.createElement("tr");
+      tr.innerHTML = `
+        <td>${o.orderId}</td>
+        <td>${o.name}</td>
+        <td>${o.phone}</td>
+        <td>${o.totalQty}</td>
+        <td>₹${o.totalAmount}</td>
+        <td><span class="status ${o.status}">${o.status}</span></td>
+        <td class="right">
+          <select data-id="${o.orderId}">
+            ${["Pending","Confirmed","Packed","Shipped","Delivered","Cancelled"]
+              .map(s=>`<option ${s===o.status?"selected":""}>${s}</option>`).join("")}
+          </select>
+          <button class="btn btn-dark" data-print="${o.orderId}">Invoice</button>
+        </td>
+      `;
+      rows.appendChild(tr);
+    });
+
+    rows.querySelectorAll("select").forEach(sel=>{
+      sel.onchange = async () => {
+        await fetch(API_BASE + "/admin/order/" + sel.dataset.id,{
+          method:"PUT",headers:{"Content-Type":"application/json"},
+          body:JSON.stringify({status:sel.value})
+        });
+      };
+    });
+
+    rows.querySelectorAll("button[data-print]").forEach(b=>{
+      b.onclick = ()=> printInvoice(b.dataset.print);
+    });
+  }
+
+  function printInvoice(orderId){
+    const w = window.open("", "_blank");
+    w.document.write("<h2>Valley Notebooks — Invoice</h2><p>Order ID: "+orderId+"</p>");
+    w.print();
+  }
+
+  qs("#exportBtn").onclick = async () => {
+    const r = await fetch(API_BASE + "/admin/orders");
+    const data = await r.json();
+    const head = Object.keys(data[0]||{}).join(",");
+    const body = data.map(o=>Object.values(o).join(",")).join("\n");
+    const blob = new Blob([head+"\n"+body],{type:"text/csv"});
+    const a = document.createElement("a");
+    a.href = URL.createObjectURL(blob);
+    a.download = "orders.csv";
+    a.click();
+  };
+
+  if(isAuthed()) showDash();
+</script>
+</body>
+  </html>
