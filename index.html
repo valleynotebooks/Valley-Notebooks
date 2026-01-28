@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Valley Notebooks | Premium Bulk Notebook Supplier</title>
+  <meta name="description" content="Valley Notebooks – Premium quality notebooks for schools, institutes & wholesalers. Transparent pricing, bulk orders, PAN India delivery." />
+  <meta name="keywords" content="Valley Notebooks, bulk notebooks, copy notebook, jumbo notebook, A4 notebook, spiral notebook" />
+  <meta name="author" content="Valley Notebooks" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#0b0b0b" />
+
+  <!-- PWA -->
+  <link rel="manifest" href="/manifest.json" />
+  <link rel="apple-touch-icon" href="/icon-192.png" />
+
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+  <!-- CSS -->
+  <link rel="stylesheet" href="style.css" />
+</head>
+
+<body>
+  <noscript>
+    <div class="noscript-warning">
+      JavaScript is required to use this website properly.
+    </div>
+  </noscript>
+
+  <!-- LOADER -->
+  <div id="page-loader">
+    <div class="spinner"></div>
+  </div>
+
+  <!-- HEADER -->
+  <header class="header">
+    <div class="container header-inner">
+      <div class="logo">Valley <span>Notebooks</span></div>
+      <nav class="nav">
+        <a href="#products">Products</a>
+        <a href="#trust">Trust</a>
+        <a href="#faq">FAQ</a>
+        <a href="#contact">Contact</a>
+        <button id="cart-btn">
+          Cart <span id="cart-count">0</span>
+        </button>
+      </nav>
+    </div>
+  </header>
+
+  <!-- HERO -->
+  <section class="hero">
+    <div class="container">
+      <h1>Premium Bulk Notebooks for Institutions & Wholesalers</h1>
+      <p>Fixed transparent pricing · Minimum bulk orders · PAN India delivery</p>
+      <a href="#products" class="btn-primary">Browse Notebooks</a>
+    </div>
+  </section>
+
+  <!-- OFFLINE MESSAGE -->
+  <div id="offline-banner">
+    You are offline. Some features may not work properly.
+  </div>
+
+  <!-- PRODUCTS -->
+  <section id="products" class="section">
+    <div class="container">
+      <h2 class="section-title">Our Notebook Range</h2>
+
+      <!-- CATEGORY FILTER -->
+      <div class="category-tabs">
+        <button class="tab active" data-category="copy">Copy Notebook</button>
+        <button class="tab" data-category="jumbo">Jumbo Notebook</button>
+        <button class="tab" data-category="a4">A4 Notebook</button>
+        <button class="tab" data-category="spiral">Spiral Notebook</button>
+      </div>
+
+      <!-- PRODUCT GRID -->
+      <div id="product-grid" class="product-grid">
+        <!-- Injected by script.js -->
+      </div>
+    </div>
+  </section>
+
+  <!-- CART DRAWER -->
+  <aside id="cart-drawer">
+    <div class="cart-header">
+      <h3>Your Cart</h3>
+      <button id="close-cart">✕</button>
+    </div>
+
+    <div id="cart-items"></div>
+
+    <div class="cart-footer">
+      <div class="cart-total">
+        Total: ₹<span id="cart-total">0</span>
+      </div>
+      <button id="checkout-btn" class="btn-primary" disabled>
+        Proceed to Checkout
+      </button>
+    </div>
+  </aside>
+
+  <!-- CHECKOUT -->
+  <section id="checkout-section" class="section hidden">
+    <div class="container checkout-container">
+      <h2>Checkout</h2>
+
+      <form id="checkout-form" autocomplete="off">
+        <div class="form-group">
+          <label>Full Name</label>
+          <input type="text" id="name" required />
+        </div>
+
+        <div class="form-group">
+          <label>Phone Number</label>
+          <input type="tel" id="phone" maxlength="10" required />
+        </div>
+
+        <div class="form-group">
+          <label>Full Address</label>
+          <textarea id="address" required></textarea>
+        </div>
+
+        <div class="form-group">
+          <label>Pincode</label>
+          <input type="text" id="pincode" maxlength="6" required />
+        </div>
+
+        <div class="checkout-summary">
+          <p>Final Amount: ₹<span id="final-amount">0</span></p>
+          <p>Estimated Delivery: <span id="delivery-date"></span></p>
+        </div>
+
+        <button type="submit" class="btn-primary">
+          Place Order
+        </button>
+      </form>
+    </div>
+  </section>
+
+  <!-- THANK YOU -->
+  <section id="thankyou-section" class="section hidden">
+    <div class="container thankyou">
+      <h2>Thank You for Your Order</h2>
+      <p>Your order has been placed successfully.</p>
+      <p>Order ID: <strong id="order-id"></strong></p>
+      <button id="download-invoice" class="btn-primary">
+        Download Invoice (PDF)
+      </button>
+    </div>
+  </section>
+
+  <!-- TRUST -->
+  <section id="trust" class="section dark">
+    <div class="container">
+      <h2 class="section-title">What Our Customers Say</h2>
+      <div class="testimonials">
+        <div class="testimonial">
+          “Excellent quality notebooks and professional service.”<br>
+          <span>— School Administrator</span>
+        </div>
+        <div class="testimonial">
+          “Transparent pricing and reliable bulk supply.”<br>
+          <span>— Wholesale Distributor</span>
+        </div>
+        <div class="testimonial">
+          “Premium quality and timely delivery.”<br>
+          <span>— Coaching Institute Owner</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- POLICIES -->
+  <section class="section">
+    <div class="container policies">
+      <h3>Terms & Conditions</h3>
+      <ul>
+        <li>Minimum order quantity is 100 notebooks</li>
+        <li>Orders once confirmed cannot be cancelled</li>
+        <li>Delivery timelines are estimates</li>
+        <li>Valley Notebooks reserves order acceptance rights</li>
+        <li>Product images are reference only</li>
+        <li>Jurisdiction: Jammu & Kashmir only</li>
+      </ul>
+
+      <h3>Privacy Policy</h3>
+      <ul>
+        <li>Customer data used only for order processing</li>
+        <li>No selling or sharing of customer data</li>
+        <li>Secure storage of information</li>
+        <li>Contact only for order & support</li>
+        <li>Data deletion available on request</li>
+      </ul>
+
+      <h3>Refund & Return Policy</h3>
+      <ul>
+        <li>Only damaged or incorrect products eligible</li>
+        <li>Request within 48 hours of delivery</li>
+        <li>No change-of-mind returns</li>
+        <li>Refund within 7 working days after verification</li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- FAQ -->
+  <section id="faq" class="section dark">
+    <div class="container">
+      <h2 class="section-title">Frequently Asked Questions</h2>
+      <div class="faq-item">
+        <strong>Minimum order quantity?</strong>
+        <p>100 notebooks</p>
+      </div>
+      <div class="faq-item">
+        <strong>Do you deliver PAN India?</strong>
+        <p>Yes, PAN India delivery available</p>
+      </div>
+      <div class="faq-item">
+        <strong>How to track my order?</strong>
+        <p>Using Order ID or phone number</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- CONTACT -->
+  <footer id="contact" class="footer">
+    <div class="container footer-inner">
+      <div>
+        <h4>Valley Notebooks</h4>
+        <p>Premium bulk notebook supplier</p>
+      </div>
+      <div>
+        <p>Email: valleynotebookshelp@gmail.com</p>
+        <p>Phone: +91 91032 92029</p>
+      </div>
+    </div>
+  </footer>
+
+  <!-- SCROLL TO TOP -->
+  <button id="scroll-top">↑</button>
+
+  <!-- JS -->
+  <script src="script.js" defer></script>
+</body>
+</html>
